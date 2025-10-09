@@ -6,12 +6,6 @@ A generic singly linked list implementation in Java that provides efficient inse
 
 This `LinkedList<T>` class is a custom implementation of a singly linked list data structure. It stores elements in nodes, where each node contains data and a reference to the next node in the sequence. The class uses Java generics to support any data type.
 
-## Package
-
-```
-com.mycompany.data.structures
-```
-
 ## Features
 
 - **Generic Implementation**: Works with any object type using Java generics
