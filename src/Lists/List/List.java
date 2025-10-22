@@ -1,8 +1,7 @@
 package com.mycompany.data.structures;
 
-public class List<T> {
+public class List<T> extends MyAbstractList<T>{
     private T[] arr;
-    private int size;
     private int capacity;
     
     public List(){
@@ -17,6 +16,7 @@ public class List<T> {
         size = 0;
     }
     
+    @Override
     public int getSize(){
         return size;
     }
@@ -32,6 +32,7 @@ public class List<T> {
         arr = arr2;
     }
     
+    @Override
     public void add(T item, int index){
         if(index < 0 || index > size){
             throw new IndexOutOfBoundsException("Invalid index: " + index);
@@ -47,6 +48,7 @@ public class List<T> {
         size++;
     }
     
+    @Override
     public void append(T item){
         if(isFull()){
             expand();
@@ -64,6 +66,7 @@ public class List<T> {
         arr[index] = item;
     }
     
+    @Override
     public void deleteByIndex(int index){
         if(index < 0 || index >= size){
             throw new IndexOutOfBoundsException("Invalid index: " + index);
@@ -75,15 +78,20 @@ public class List<T> {
         size--;
     }
     
+    @Override
     public void deleteByValue(T item){
         int index = isExist(item);
         if(index == -1){
             System.out.println("Element doesn't exist");
-        } else{
+        }
+        
+        while(index != -1){
             deleteByIndex(index);
+            index = isExist(item);
         }
     }
     
+    @Override
     public T getItem(int index){
         if(index < 0 || index >= size){
             throw new IndexOutOfBoundsException("Invalid index: " + index);
@@ -92,6 +100,7 @@ public class List<T> {
         return arr[index];
     }
     
+    @Override
     public boolean isEmpty(){
         return size == 0;
     }
@@ -100,6 +109,7 @@ public class List<T> {
         return size == capacity;
     }
     
+    @Override
     public int isExist(T item){
         for(int i = 0; i < size; i++){
             if(arr[i].equals(item))
@@ -111,18 +121,22 @@ public class List<T> {
     public boolean contains(T item){
         return isExist(item) != -1;
     }
+    
+    public void clear(){
+        size = 0;
+    }
 
     @Override
     public String toString() {
         if (isEmpty()) {
             return "List: []";
         }
-        StringBuilder sb = new StringBuilder("List: [");
+        String s = "List: [";
         for (int i = 0; i < size; i++) {
-            sb.append(arr[i]);
-            if (i < size - 1) sb.append(", ");
+            s += (arr[i] + "");
+            if (i < size - 1) s += ", ";
         }
-        sb.append("]");
-        return sb.toString();
+        s += "]";
+        return s;
     }
 }

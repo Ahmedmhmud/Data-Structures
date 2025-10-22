@@ -1,37 +1,36 @@
 package com.mycompany.data.structures;
 
-public class LinkedList<T> {
+public class DoublyLinkedList<T> extends MyAbstractList<T> {
     private Node<T> head;
-    private int size;
     
-    class Node<T> {
+    private class Node<T> {
         private T data;
         private Node<T> next;
-        
-        private Node(){
-            this.next = null;
-        }
+        private Node<T> prev;
         
         private Node(T data){
             this.data = data;
             this.next = null;
+            this.prev = null;
         }
     }
     
-    public LinkedList(){
+    public DoublyLinkedList(){
         head = null;
         size = 0;
     }
     
-    public LinkedList(T data){
+    public DoublyLinkedList(T data){
         head = new Node(data);
         size = 1;
     }
     
+    @Override
     public int getSize(){
         return size;
     }
     
+    @Override
     public void add(T data, int index){
         if(index > size || index < 0){
             throw new IndexOutOfBoundsException("Invalid index " + index);
@@ -40,18 +39,24 @@ public class LinkedList<T> {
         Node<T> newNode = new Node(data);
         if(index == 0){
             newNode.next = head;
+            if(head != null)
+                head.prev = newNode;
             head = newNode;
         }else{
             Node<T> curr = head;
             for(int i = 0; i < index-1; i++)
                 curr = curr.next;
             newNode.next = curr.next;
+            newNode.prev = curr;
             curr.next = newNode;
+            if(newNode.next != null)
+                newNode.next.prev = newNode;
         }
         
         size++;
     }
     
+    @Override
     public void append(T data){
         if(head == null){
             head = new Node(data);
@@ -62,11 +67,13 @@ public class LinkedList<T> {
                 curr = curr.next;
             }
             curr.next = newNode;
+            newNode.prev = curr;
         }
         
         size++;
     }
     
+    @Override
     public void set(T item, int index){
         if(index >= size || index < 0)
             throw new IndexOutOfBoundsException("Invalid index "+ index);
@@ -79,6 +86,7 @@ public class LinkedList<T> {
     
     
     
+    @Override
     public void deleteByIndex(int index){
         if(index >= size || index < 0){
             throw new IndexOutOfBoundsException("Invalid index " + index);
@@ -86,16 +94,21 @@ public class LinkedList<T> {
         
         if(index == 0){
             head = head.next;
+            head.prev = null;
         }else{
             Node<T> curr = head;
             for(int i = 0; i < index-1; i++)
                 curr = curr.next;
+            if(curr.next.next != null){
+                curr.next.next.prev = curr;
+            }
             curr.next = curr.next.next;
         }
         
         size--;
     }
     
+    @Override
     public void deleteByValue(T item){
         int index = isExist(item);
         if(index == -1){
@@ -109,6 +122,7 @@ public class LinkedList<T> {
         }
     }
     
+    @Override
     public T getItem(int index){
         if(index >= size || index < 0)
             throw new IndexOutOfBoundsException("Invalid index " + index);
@@ -119,10 +133,12 @@ public class LinkedList<T> {
         return curr.data;
     }
     
+    @Override
     public boolean isEmpty(){
         return head == null;
     }
     
+    @Override
     public int isExist(T item){
         if(head == null)
             return -1;
@@ -144,6 +160,27 @@ public class LinkedList<T> {
     
     public boolean contains(T item){
         return isExist(item) != -1;
+    }
+    
+    public void display(){
+        if(head == null){
+            System.out.println("List is empty");
+        } else{
+            Node<T> curr = head;
+            System.out.print("List from start: ");
+            while(curr.next != null){
+                System.out.print(curr.data + " ");
+                curr = curr.next;
+            }
+            System.out.println(curr.data);
+            
+            System.out.print("List from end: ");
+            while(curr != null){
+                System.out.print(curr.data + " ");
+                curr = curr.prev;
+            }
+            System.out.println();
+        }
     }
     
     @Override
